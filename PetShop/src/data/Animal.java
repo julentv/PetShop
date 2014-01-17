@@ -16,6 +16,8 @@ public class Animal implements Serializable{
 	private int maxLight;
 	private int minTemp;
 	private int maxTemp;
+	private double currentLight;
+	private double currentTemperature;
 	
 	public Animal(String name, int location, int minLight, int maxLight, int minTemp, int maxTemp ){
 		this.name=name;
@@ -24,6 +26,8 @@ public class Animal implements Serializable{
 		this.minLight= minLight;
 		this.maxTemp= maxTemp;
 		this.minTemp= minTemp;
+		this.currentLight=0;
+		this.currentTemperature=0;
 	}
 
 	@Override
@@ -77,6 +81,22 @@ public class Animal implements Serializable{
 
 	public void setMaxTemp(int maxTemp) {
 		this.maxTemp = maxTemp;
+	}
+
+	public double getCurrentLight() {
+		return currentLight;
+	}
+
+	public void setCurrentLight(double currentLight) {
+		this.currentLight = currentLight;
+	}
+
+	public double getCurrentTemperature() {
+		return currentTemperature;
+	}
+
+	public void setCurrentTemperature(double currentTemperature) {
+		this.currentTemperature = currentTemperature;
 	}
 	
 	
