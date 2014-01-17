@@ -19,11 +19,11 @@ public class AnimalDetailsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_animal_details);
-		Log.i("entra", "entra");
+		
 		loadAnimalArray();
 		//The user did not activate the search
 		pos=getIntent().getIntExtra("animalPosition", -1);
-				
+		
 		ArrayList<String> positions = getIntent().getStringArrayListExtra("positionsOnSearch");
 		if (positions!=null){
 			//position on arrAnimals if on the main activity the user used the search method

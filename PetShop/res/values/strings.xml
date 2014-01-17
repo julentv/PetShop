@@ -15,5 +15,7 @@
     <string name="save">Save</string>
     <string name="Search">Search</string>
     <string name="title_activity_animal_details">AnimalDetailsActivity</string>
+    <string name="title_activity_widget">WidgetActivity</string>
+    <string name="select">Select your favourite animal</string>
 
 </resources>
