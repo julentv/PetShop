@@ -1,20 +1,33 @@
 package com.example.petshop;
 
 import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import com.example.petshop.http.SimpleHttpClient;
 import data.Animal;
 import data.AnimalManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
+import android.content.Context;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 public class AnimalDetailsActivity extends Activity {
 	private ArrayList<Animal> arrAnimals;
-	private ArrayAdapter <Animal> adpAnimals;
 	private int pos;
+	private final String TEMPERATURE_IDENTIFICATOR="temp";
+	private final String LIGHT_IDENTIFICATOR="light";
+	private final String TEMP_ID="Temperature";
+	private final String LIGHT_ID="Light";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,7 +57,6 @@ public class AnimalDetailsActivity extends Activity {
     	if(arrAnimals == null){
     		arrAnimals = new ArrayList<Animal>();
     	}
-    	adpAnimals = new ArrayAdapter<Animal>(this, android.R.layout.simple_list_item_1, arrAnimals);
 	}
 
 	private void fillAnimalDetails(){
@@ -80,5 +92,77 @@ public class AnimalDetailsActivity extends Activity {
 			
 			
 		}
+	}
+	private void updateCurrentValues(){
+		//poner un loading o algo
+		
+		//receive the current temperature
+		receiveValue(TEMPERATURE_IDENTIFICATOR, TEMP_ID);
+		//editar el cuadro de texto
+		
+		//receive the current light
+		receiveValue(LIGHT_IDENTIFICATOR, LIGHT_ID);
+		//editar el cuadro de texto
+		
+		//quitar el loading o algo
+	}
+	
+	/* WIFI CONNECTION*/
+	
+	public void receiveValue(String variable, String parameter){
+		// First check if there is connectivity
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+	    if (networkInfo != null && networkInfo.isConnected()) {
+			// OK -> Access the Internet
+	    	String ruta="http://json.internetdelascosas.es/arduino/getlast.php?device_id=8&data_name="+variable+"&nitems=1";
+			new RefreshLocation().execute(ruta,parameter);
+	    } else {
+			// No -> Display error message
+	        Toast.makeText(this, "Error getting the current value of "+parameter, Toast.LENGTH_SHORT).show();
+	    }		
+	}
+	
+	private class RefreshLocation extends AsyncTask<String, Integer, ArrayList<String>>{				
+		
+		@Override
+		protected ArrayList<String> doInBackground(String... params) {
+			String url = params[0];
+			SimpleHttpClient shc = new SimpleHttpClient(url);
+	    	publishProgress(40);
+			String result = shc.doGet();
+			if(result != null){
+				ArrayList<String> resultado= new ArrayList<String>();
+				resultado.add(params[1]);
+				resultado.add(Double.valueOf(getValueFromJson(result)).toString());
+				return resultado;
+			}else
+				return null;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<String> result) {
+			//here does what it need to do with the components
+		}
+		
+		private double getValueFromJson(String data){
+			double value=0;
+			try {
+				JSONObject json = new JSONObject(data);
+				value = json.getDouble("data_value");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return value;
+		}
+			
+					
 	}
 }

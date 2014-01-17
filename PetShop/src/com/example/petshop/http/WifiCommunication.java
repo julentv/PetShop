@@ -28,7 +28,7 @@ public class WifiCommunication {
 	        //Toast.makeText(this, R.string.msg_error_no_connection, Toast.LENGTH_SHORT).show();
 	    }		
 	}
-	public void receiveValues(Activity activity, String variable){
+	public void receiveValue(Activity activity, String variable){
 		// First check if there is connectivity
 		ConnectivityManager connMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -43,8 +43,6 @@ public class WifiCommunication {
 	    }		
 	}
 	
-	
-	// Convenience class to access the Internet and update UI elements
 	private class RefreshLocation extends AsyncTask<String, Integer, ArrayList<Float>>{				
 		
 		@Override
