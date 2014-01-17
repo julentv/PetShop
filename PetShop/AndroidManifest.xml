@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="18" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -30,6 +31,19 @@
             android:name="com.example.petshop.AnimalDetailsActivity"
             android:label="@string/title_activity_animal_details" >
         </activity>
+        <activity
+            android:name="com.example.petshop.WidgetActivity"
+            android:label="@string/title_activity_widget" >
+            <intent-filter>
+        		<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+    		</intent-filter>
+        </activity>
+        <receiver android:name="com.example.widget.WidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info"/>
+        </receiver>
     </application>
 
 </manifest>
