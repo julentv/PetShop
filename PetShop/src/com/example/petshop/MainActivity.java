@@ -1,11 +1,18 @@
 package com.example.petshop;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
+import com.example.settings.MySettingsActivity;
+
 import data.Animal;
 import data.AnimalManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -30,11 +37,28 @@ public class MainActivity extends Activity {
 	private int animalPosition;
 	private ActionMode mActionMode = null;
 	public static final int EDIT_ANIMAL = 1;
+	private Locale locale = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);               
+	    Configuration config = getBaseContext().getResources().getConfiguration();
+
+	    String lang = settings.getString("pref_set_language", "Spanish");
+	    //String lang= "en";
+	    if (lang.equals("Español")){
+	    	lang="es";
+		}else{
+			lang="en";
+		}
+	    if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang))
+	    {
+	        locale = new Locale(lang);
+	        Locale.setDefault(locale);
+	        config.locale = locale;
+	        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+	    }
       createAnimalList();
      list = (ListView)findViewById(R.id.listAnimals);
      list.setOnItemClickListener(new OnItemClickListener() {
@@ -58,7 +82,7 @@ public class MainActivity extends Activity {
 				}
 		      }
 		 });
-
+     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 	}
 
 	@Override
@@ -76,6 +100,11 @@ public class MainActivity extends Activity {
 			startActivityForResult(intent, ADD_ANIMAL);
 			
 		} 
+		if (item.getItemId()== R.id.action_settings){
+			
+			Intent i= new Intent(this, MySettingsActivity.class);
+			startActivity(i);
+		}
 		
 		return super.onOptionsItemSelected(item);
 	}
@@ -160,6 +189,18 @@ public class MainActivity extends Activity {
     	this.createAnimalList();
     	
     	Log.i("Stop", "Saving data");
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+	    super.onConfigurationChanged(newConfig);
+	    if (locale != null)
+	    {
+	        newConfig.locale = locale;
+	        Locale.setDefault(locale);
+	        getBaseContext().getResources().updateConfiguration(newConfig, getBaseContext().getResources().getDisplayMetrics());
+	    }
 	}
 private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 		

@@ -1,11 +1,16 @@
 package com.example.petshop;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
 import data.Animal;
 import data.AnimalManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -18,10 +23,27 @@ public class NewAnimalActivity extends Activity {
 	private ArrayAdapter <Animal> adpAnimals;
 	public static final int ADD_ANIMAL = 1;
 	private int posAnimal;
+	private Locale locale = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_animal);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);               
+	    Configuration config = getBaseContext().getResources().getConfiguration();
+
+	    String lang = settings.getString("pref_set_language", "Spanish");
+	    if (lang.equals("Español")||lang.equals("Spanish")){
+	    	lang="es";
+		}else{
+			lang="en";
+		}
+	    if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang))
+	    {
+	        locale = new Locale(lang);
+	        Locale.setDefault(locale);
+	        config.locale = locale;
+	        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+	    }
 		loadAnimalArray();
 		posAnimal=getIntent().getIntExtra("animalPosition", -1);
 		ArrayList<String> positions = getIntent().getStringArrayListExtra("positionsOnSearch");
@@ -46,6 +68,18 @@ public class NewAnimalActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.new_animal, menu);
 		return true;
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+	    super.onConfigurationChanged(newConfig);
+	    if (locale != null)
+	    {
+	        newConfig.locale = locale;
+	        Locale.setDefault(locale);
+	        getBaseContext().getResources().updateConfiguration(newConfig, getBaseContext().getResources().getDisplayMetrics());
+	    }
 	}
 	
 	public void loadAnimalArray(){
@@ -108,6 +142,8 @@ public class NewAnimalActivity extends Activity {
 		else{
 			arrAnimals.set(posAnimal, newAnimal);
 		}
+		
+		//Enviar x internet 
 		Log.i("Stop", "Saving data");
     	(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
     	Intent intent = new Intent( this, MainActivity.class );

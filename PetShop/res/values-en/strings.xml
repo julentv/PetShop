@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">PetShop</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_new_animal">NewAnimalActivity</string>
-    <string name="addAnimal">Anyadir</string>
+    <string name="addAnimal">Add</string>
     <string name="Animal">Animal</string>
-    <string name="location">Localización</string>
-    <string name="light">Luz: </string>
-    <string name="current_light">Luz actual: </string>
-    <string name="current_temperature">Temperatura actual: </string>
-    <string name="temperature">Temperatura: </string>
-    <string name="save">Guardar</string>
-    <string name="Search">Buscar</string>
+    <string name="location">Location</string>
+    <string name="light">Light: </string>
+    <string name="current_light">Current Light: </string>
+    <string name="current_temperature">Current Temperature: </string>
+    <string name="temperature">Temperature: </string>
+    <string name="save">Save</string>
+    <string name="Search">Search</string>
     <string name="title_activity_animal_details">AnimalDetailsActivity</string>
     <string name="title_activity_widget">WidgetActivity</string>
-    <string name="select">Selecciona tu animal favorito</string>
-    <string name="edit">Editar</string>
-    <string name="Delete">Borrar</string>
-    <string name="summary_userName">Tu nombre aquí</string>
-    <string name="User_Data">Información de usuario</string>
-    <string name="summary_email">Tu email aquí </string>
-    <string name="summary_language">Selecciona lenguaje </string>
-    <string name="Language">Lenguaje: </string>
+    <string name="select">Select your favourite animal</string>
+    <string name="edit">Edit</string>
+    <string name="Delete">Delete</string>
+    <string name="summary_userName">Your name here</string>
+    <string name="User_Data">User Data</string>
+    <string name="summary_email">Your email here </string>
+    <string name="summary_language">Choose language </string>
+    <string name="Language">Language: </string>
     <string name="application_settings">Application Settings</string>
     <string name="pref_contact_name">pref_contact_name</string>
     <string name="pref_contact_email">pref_contact_email</string>
     <string name="pref_set_language">pref_set_language</string>
-    <string name="name">Nombre: </string>
+    <string name="name">Name: </string>
     <string name="email">Email: </string>
 
     <string-array name="empty_array"></string-array>
     <string-array name="languages">
-        <item>Español</item>
-        <item>Inglés</item>
+        <item>Spanish</item>
+        <item>English</item>
     </string-array>
 
     <string name="title_activity_my_settings">MySettingsActivity</string>
-
+    
 </resources>

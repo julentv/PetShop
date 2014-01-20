@@ -1,6 +1,7 @@
 package com.example.petshop;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,8 +12,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -27,12 +31,24 @@ public class AnimalDetailsActivity extends Activity {
 	private final String LIGHT_IDENTIFICATOR="light";
 	private final String TEMP_ID="Temperature";
 	private final String LIGHT_ID="Light";
+	private Locale locale = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_animal_details);
-		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);               
+	    Configuration config = getBaseContext().getResources().getConfiguration();
+
+	    String lang = settings.getString("language","es");
+	    //String lang= "en";
+	    if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang))
+	    {
+	        locale = new Locale(lang);
+	        Locale.setDefault(locale);
+	        config.locale = locale;
+	        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+	    }
 		loadAnimalArray();
 		//The user did not activate the search
 		pos=getIntent().getIntExtra("animalPosition", -1);
@@ -45,6 +61,18 @@ public class AnimalDetailsActivity extends Activity {
 		fillAnimalDetails();
 	}
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+	    super.onConfigurationChanged(newConfig);
+	    if (locale != null)
+	    {
+	        newConfig.locale = locale;
+	        Locale.setDefault(locale);
+	        getBaseContext().getResources().updateConfiguration(newConfig, getBaseContext().getResources().getDisplayMetrics());
+	    }
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
