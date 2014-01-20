@@ -17,5 +17,7 @@
     <string name="title_activity_animal_details">AnimalDetailsActivity</string>
     <string name="title_activity_widget">WidgetActivity</string>
     <string name="select">Select your favourite animal</string>
+    <string name="edit">Edit</string>
+    <string name="Delete">Delete</string>
 
 </resources>

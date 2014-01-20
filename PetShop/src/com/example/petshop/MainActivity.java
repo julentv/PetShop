@@ -7,15 +7,19 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 
 public class MainActivity extends Activity {
 	public static final int ADD_ANIMAL = 0;
@@ -24,6 +28,7 @@ public class MainActivity extends Activity {
 	private ListView list;
 	private ArrayList<String> positions ;
 	private int animalPosition;
+	private ActionMode mActionMode = null;
 	public static final int EDIT_ANIMAL = 1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +91,23 @@ public class MainActivity extends Activity {
     	adpAnimals = new ArrayAdapter<Animal>(this, android.R.layout.simple_list_item_activated_2, android.R.id.text1, arrAnimals);		
     	list = (ListView)findViewById(R.id.listAnimals);
     	list.setAdapter(adpAnimals);
-    	
+    	list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+    	list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		    // Called when the user long-clicks an item on the list
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View row, int position, long rowid) {
+		        if (mActionMode != null) {
+		            return false;
+		        }
+		        animalPosition=position;
+		        // Important: to marked the editing row as activated
+		        list.setItemChecked(position, true);
+
+		        // Start the CAB using the ActionMode.Callback defined above
+		        mActionMode = MainActivity.this.startActionMode(mActionModeCallback);
+		        return true;
+		    }
+		});
     	adpAnimals.notifyDataSetChanged();
 	}
 
@@ -124,7 +145,7 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		
-		if (requestCode == ADD_ANIMAL){ // If it was an ADD_ITEM, then add the new item and update the list
+		if (requestCode == ADD_ANIMAL || requestCode == EDIT_ANIMAL){ // If it was an ADD_ITEM, then add the new item and update the list
 			if(resultCode == Activity.RESULT_OK){
 				
 				//this.createEventList();
@@ -132,4 +153,72 @@ public class MainActivity extends Activity {
 			}		
 		}
 	}
+	
+	public void deleteAnimal(){
+		
+    	(new AnimalManager(getApplicationContext())).deleteAnimal(animalPosition);
+    	this.createAnimalList();
+    	
+    	Log.i("Stop", "Saving data");
+	}
+private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+		
+	    // Called when the action mode is created; startActionMode() was called
+	    @Override
+	    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	        // Inflate a menu resource providing context menu items
+	        MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.animal_action, menu);
+//	        MenuItem mnuShare = menu.findItem(R.id.mnu_event_share);
+//	        
+//			ShareActionProvider shareProvider = (ShareActionProvider) mnuShare.getActionProvider();
+//			shareProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+//			Intent intent = new Intent(Intent.ACTION_SEND);
+//			intent.setType("text/plain");
+//			String eventDetail="Event: "+arrEvents.get(eventPosition).toString();
+//			intent.putExtra(Intent.EXTRA_TEXT, eventDetail);
+//			shareProvider.setShareIntent(intent);
+	        return true;
+	    }
+
+	    // Called when the user enters the action mode
+	    @Override
+	    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+	    	// Disable the list to avoid selecting other elements while editing one
+	    	MainActivity.this.list.setEnabled(false);
+	        return true; // Return false if nothing is done
+	    }
+	    
+	    // Called when the user selects a contextual menu item
+	    @Override
+	    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+	        switch (item.getItemId()) {
+	            case R.id.mnu_animal_edit:
+	                mode.finish(); // Action picked, so close the CAB and execute action
+	                // Edit event
+	                Intent intent = new Intent(MainActivity.this, NewAnimalActivity.class );
+	                	            	
+	            	intent.putExtra("animalPosition", animalPosition);
+	            	intent.putExtra("positionsOnSearch", positions);
+	            	startActivityForResult(intent,EDIT_ANIMAL);
+	                return true;
+	            case R.id.mnu_animal_delete:
+	                mode.finish(); // Action picked, so close the CAB and execute action
+	                // Delete event
+	                deleteAnimal();
+	                return true;
+//	            
+	            default:
+	                return false;
+	        }
+	    }
+
+	    // Called when the user exits the action mode
+	    @Override
+	    public void onDestroyActionMode(ActionMode mode) {
+	    	// Re-enable the list after edition
+	    	MainActivity.this.list.setEnabled(true);
+	        mActionMode = null;
+	    }
+	};
 }

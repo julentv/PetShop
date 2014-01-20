@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/mnu_animal_edit" android:icon="@drawable/ic_action_edit" android:title="@string/edit" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/mnu_animal_delete" android:icon="@drawable/ic_action_discard" android:title="@string/Delete" android:showAsAction="ifRoom"></item>
+
+</menu>

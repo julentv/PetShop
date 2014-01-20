@@ -1,7 +1,6 @@
 package com.example.petshop;
 
 import java.util.ArrayList;
-
 import data.Animal;
 import data.AnimalManager;
 import android.os.Bundle;
@@ -18,12 +17,21 @@ public class NewAnimalActivity extends Activity {
 	private ArrayList<Animal> arrAnimals;
 	private ArrayAdapter <Animal> adpAnimals;
 	public static final int ADD_ANIMAL = 1;
+	private int posAnimal;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_animal);
 		loadAnimalArray();
-		
+		posAnimal=getIntent().getIntExtra("animalPosition", -1);
+		ArrayList<String> positions = getIntent().getStringArrayListExtra("positionsOnSearch");
+		if (positions!=null){
+			//position on arrAnimals if on the main activity the user used the search method
+			posAnimal= Integer.parseInt(positions.get(posAnimal));
+		}
+		if(posAnimal!=-1){
+			fillAnimal(arrAnimals.get(posAnimal));
+		}
 		Button btnSave = (Button)findViewById(R.id.btnSave);
 		btnSave.setOnClickListener(new View.OnClickListener() {
 			    @Override
@@ -48,6 +56,33 @@ public class NewAnimalActivity extends Activity {
     	adpAnimals = new ArrayAdapter<Animal>(this, android.R.layout.simple_list_item_1, arrAnimals);
 	}
 	
+	public void fillAnimal(Animal animal){
+		if (posAnimal!= -1){
+			EditText editName= (EditText)findViewById(R.id.editName);
+			String animalName= animal.getName();
+			if( animalName!= null)
+				editName.setText(animalName);
+			
+			EditText edtLocation = (EditText) findViewById(R.id.editLocation);
+			char location = animal.getLocation();
+			edtLocation.setText(Character.valueOf(location).toString());
+			
+			EditText editMinTemp= (EditText)findViewById(R.id.editTempMin);
+			editMinTemp.setText(Double.toString(animal.getMinTemp()));
+		
+			EditText editMaxTemp= (EditText) findViewById(R.id.editTempMax);
+			editMaxTemp.setText(Double.toString(animal.getMaxTemp()));
+			
+			EditText editMinLight= (EditText)findViewById(R.id.editLightMin);
+			editMinLight.setText(Double.toString(animal.getMinLight()));
+			
+			EditText editMaxLight= (EditText) findViewById(R.id.editLightMax);
+			editMaxLight.setText(Double.toString(animal.getMaxLight()));
+			
+			
+			}
+	}
+	
 	public void createNewAnimal(){
 		EditText editName= (EditText)findViewById(R.id.editName);
 		String name= editName.getText().toString();
@@ -61,18 +96,18 @@ public class NewAnimalActivity extends Activity {
 		EditText editMaxLight= (EditText) findViewById(R.id.editLightMax);
 		String maxLight= editMaxLight.getText().toString();
 		
-		Animal newAnimal = new Animal(name, Integer.parseInt(location), Integer.parseInt(minLight), Integer.parseInt(maxLight), Integer.parseInt(minTemp), Integer.parseInt(maxTemp));
+		Animal newAnimal = new Animal(name,location.toCharArray()[0], Double.parseDouble(minLight), Double.parseDouble(maxLight), Double.parseDouble(minTemp), Double.parseDouble(maxTemp));
 		
-		//add the event to the array
-//		if (pos==-1){
+		//add the animal to the array
+		if (posAnimal==-1){
 			
 			arrAnimals.add(newAnimal);
 			
-//		}
-		//edit the corresponding event
-//		else{
-//			arrEvents.set(pos, newEvent);
-//		}
+		}
+		//edit the corresponding animal
+		else{
+			arrAnimals.set(posAnimal, newAnimal);
+		}
 		Log.i("Stop", "Saving data");
     	(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
     	Intent intent = new Intent( this, MainActivity.class );

@@ -85,4 +85,10 @@ public class AnimalManager {
 		return animal;
 	}
 	
+	public void deleteAnimal(int position){
+		ArrayList<Animal>animals=this.loadAnimalsFromFile();
+		animals.remove(position);
+		this.saveAnimalsOnFile(animals);
+	}
+	
 }

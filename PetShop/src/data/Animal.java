@@ -11,15 +11,15 @@ public class Animal implements Serializable{
 	/* This attribute identifies the cage where the animal is. 
 	 * Each cage has its own sensors and actuators. (Acts like unique primary key).
 	 */
-	private int location;
-	private int minLight;
-	private int maxLight;
-	private int minTemp;
-	private int maxTemp;
+	private char location;
+	private double minLight;
+	private double maxLight;
+	private double minTemp;
+	private double maxTemp;
 	private double currentLight;
 	private double currentTemperature;
 	
-	public Animal(String name, int location, int minLight, int maxLight, int minTemp, int maxTemp ){
+	public Animal(String name, char location, double minLight, double maxLight, double minTemp, double maxTemp ){
 		this.name=name;
 		this.location= location;
 		this.maxLight= maxLight;
@@ -43,43 +43,43 @@ public class Animal implements Serializable{
 		this.name = name;
 	}
 
-	public int getLocation() {
+	public char getLocation() {
 		return location;
 	}
 
-	public void setLocation(int location) {
+	public void setLocation(char location) {
 		this.location = location;
 	}
 
-	public int getMinLight() {
+	public double getMinLight() {
 		return minLight;
 	}
 
-	public void setMinLight(int minLight) {
+	public void setMinLight(double minLight) {
 		this.minLight = minLight;
 	}
 
-	public int getMaxLight() {
+	public double getMaxLight() {
 		return maxLight;
 	}
 
-	public void setMaxLight(int maxLight) {
+	public void setMaxLight(double maxLight) {
 		this.maxLight = maxLight;
 	}
 
-	public int getMinTemp() {
+	public double getMinTemp() {
 		return minTemp;
 	}
 
-	public void setMinTemp(int minTemp) {
+	public void setMinTemp(double minTemp) {
 		this.minTemp = minTemp;
 	}
 
-	public int getMaxTemp() {
+	public double getMaxTemp() {
 		return maxTemp;
 	}
 
-	public void setMaxTemp(int maxTemp) {
+	public void setMaxTemp(double maxTemp) {
 		this.maxTemp = maxTemp;
 	}
 
