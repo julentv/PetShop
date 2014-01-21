@@ -6,6 +6,8 @@ import java.util.Locale;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.example.petshop.http.SimpleHttpClient;
+import com.example.settings.MySettingsActivity;
+
 import data.Animal;
 import data.AnimalManager;
 import android.net.ConnectivityManager;
@@ -15,11 +17,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.text.Editable;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +46,12 @@ public class AnimalDetailsActivity extends Activity {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);               
 	    Configuration config = getBaseContext().getResources().getConfiguration();
 
-	    String lang = settings.getString("language","es");
-	    //String lang= "en";
+	    String lang = settings.getString("pref_set_language", "Spanish");
+	    if (lang.equals("Español")||lang.equals("Spanish")){
+	    	lang="es";
+		}else{
+			lang="en";
+		}
 	    if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang))
 	    {
 	        locale = new Locale(lang);
@@ -77,6 +87,18 @@ public class AnimalDetailsActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.animal_details, menu);
+		MenuItem mnuShare = menu.findItem(R.id.mnu_share);
+		ShareActionProvider shareProvider = (ShareActionProvider) mnuShare.getActionProvider();
+		shareProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		//String eventDetail= arrAnimals.get(pos).getName()+" has a temperature of "+ arrAnimals.get(pos).getCurrentTemperature()+" and a light of "+arrAnimals.get(pos).getCurrentLight();
+		
+		String edtCurrentLight = ((EditText) findViewById(R.id.editCurrentLight)).getText().toString();
+		String edtCurrentTemp = ((EditText) findViewById(R.id.editCurrentTemp)).getText().toString();
+		String eventDetail= arrAnimals.get(pos).getName()+" has a temperature of "+ edtCurrentTemp+" and a light of "+edtCurrentLight;
+		intent.putExtra(Intent.EXTRA_TEXT, eventDetail);
+		shareProvider.setShareIntent(intent);
 		return true;
 	}
 	
@@ -135,6 +157,18 @@ public class AnimalDetailsActivity extends Activity {
 		//quitar el loading o algo
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		 
+		if (item.getItemId()== R.id.mnu_share){
+			
+			
+//			Intent i= new Intent(this, MySettingsActivity.class);
+//			startActivity(i);
+		}
+		
+		return super.onOptionsItemSelected(item);
+	}
 	/* WIFI CONNECTION*/
 	
 	public void receiveValue(String variable, String parameter){

@@ -29,6 +29,7 @@
     <string name="pref_set_language">pref_set_language</string>
     <string name="name">Name: </string>
     <string name="email">Email: </string>
+    <string name="share">Share</string>
 
     <string-array name="empty_array"></string-array>
     <string-array name="languages">

@@ -24,13 +24,13 @@
     <string name="summary_email">Tu email aquí </string>
     <string name="summary_language">Selecciona lenguaje </string>
     <string name="Language">Lenguaje: </string>
-    <string name="application_settings">Application Settings</string>
+    <string name="application_settings">Ajustes</string>
     <string name="pref_contact_name">pref_contact_name</string>
     <string name="pref_contact_email">pref_contact_email</string>
     <string name="pref_set_language">pref_set_language</string>
     <string name="name">Nombre: </string>
     <string name="email">Email: </string>
-
+	<string name="share">Compartir</string>
     <string-array name="empty_array"></string-array>
     <string-array name="languages">
         <item>Español</item>
