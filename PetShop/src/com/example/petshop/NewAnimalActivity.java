@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class NewAnimalActivity extends Activity {
 	private ArrayList<Animal> arrAnimals;
@@ -134,31 +135,35 @@ public class NewAnimalActivity extends Activity {
 		String minLight= editMinLight.getText().toString();
 		EditText editMaxLight= (EditText) findViewById(R.id.editLightMax);
 		String maxLight= editMaxLight.getText().toString();
-		
-		Animal newAnimal = new Animal(name,location.toCharArray()[0], Double.parseDouble(minLight), Double.parseDouble(maxLight), Double.parseDouble(minTemp), Double.parseDouble(maxTemp));
-		
-		//add the animal to the array
-		if (posAnimal==-1){
+		try{
+			Animal newAnimal = new Animal(name,location.toCharArray()[0], Double.parseDouble(minLight), Double.parseDouble(maxLight), Double.parseDouble(minTemp), Double.parseDouble(maxTemp));
 			
-			arrAnimals.add(newAnimal);
+			//add the animal to the array
+			if (posAnimal==-1){
+				
+				arrAnimals.add(newAnimal);
+				
+			}
+			//edit the corresponding animal
+			else{
+				arrAnimals.set(posAnimal, newAnimal);
+			}
 			
+			//Enviar x internet 
+			sendValues("tempmax"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMaxTemp()).toString());
+			sendValues("tempmin"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMinTemp()).toString());
+			sendValues("lightmax"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMaxLight()).toString());
+			sendValues("lightmin"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMinLight()).toString());
+			
+			
+			Log.i("Stop", "Saving data");
+	    	(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
+	    	Intent intent = new Intent( this, MainActivity.class );
+			startActivityForResult(intent,ADD_ANIMAL);
+		}catch(Exception e ){
+			Toast.makeText(this, R.string.msg_error_attributes, Toast.LENGTH_SHORT).show();
 		}
-		//edit the corresponding animal
-		else{
-			arrAnimals.set(posAnimal, newAnimal);
-		}
 		
-		//Enviar x internet 
-		sendValues("tempmax"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMaxTemp()).toString());
-		sendValues("tempmin"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMinTemp()).toString());
-		sendValues("lightmax"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMaxLight()).toString());
-		sendValues("lightmin"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMinLight()).toString());
-		
-		
-		Log.i("Stop", "Saving data");
-    	(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
-    	Intent intent = new Intent( this, MainActivity.class );
-		startActivityForResult(intent,ADD_ANIMAL);
 	}
 	
 	public void sendValues(String variable, String value){

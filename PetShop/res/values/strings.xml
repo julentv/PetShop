@@ -36,6 +36,7 @@
         <item>Español</item>
         <item>Inglés</item>
     </string-array>
+    <string name="msg_error_attributes">Todos los atributos tienen que tener un valor</string>
 
     <string name="title_activity_my_settings">MySettingsActivity</string>
 

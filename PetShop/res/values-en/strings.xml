@@ -30,6 +30,8 @@
     <string name="name">Name: </string>
     <string name="email">Email: </string>
     <string name="share">Share</string>
+    <string name="msg_error_attributes">All the attributes must have a value</string>
+    
 
     <string-array name="empty_array"></string-array>
     <string-array name="languages">

@@ -182,19 +182,7 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == ADD_ANIMAL || requestCode == EDIT_ANIMAL) { // If it
-																		// was
-																		// an
-																		// ADD_ITEM,
-																		// then
-																		// add
-																		// the
-																		// new
-																		// item
-																		// and
-																		// update
-																		// the
-																		// list
+		if (requestCode == ADD_ANIMAL || requestCode == EDIT_ANIMAL) { 
 			if (resultCode == Activity.RESULT_OK) {
 
 				// this.createEventList();
