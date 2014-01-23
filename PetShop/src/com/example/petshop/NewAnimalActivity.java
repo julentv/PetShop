@@ -3,11 +3,16 @@ package com.example.petshop;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.example.petshop.http.SimpleHttpClient;
+
 import data.Animal;
 import data.AnimalManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -144,10 +149,32 @@ public class NewAnimalActivity extends Activity {
 		}
 		
 		//Enviar x internet 
+		sendValues("tempmax"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMaxTemp()).toString());
+		sendValues("tempmin"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMinTemp()).toString());
+		sendValues("lightmax"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMaxLight()).toString());
+		sendValues("lightmin"+newAnimal.getLocation(),Double.valueOf(newAnimal.getMinLight()).toString());
+		
+		
 		Log.i("Stop", "Saving data");
     	(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
     	Intent intent = new Intent( this, MainActivity.class );
 		startActivityForResult(intent,ADD_ANIMAL);
+	}
+	
+	public void sendValues(String variable, String value){
+		// First check if there is connectivity
+		ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+	    if (networkInfo != null && networkInfo.isConnected()) {
+			// OK -> Access the Internet
+	    	String ruta="http://json.internetdelascosas.es/arduino/add.php?device_id=8&data_name="+variable+"&data_value="+value;
+	    	SimpleHttpClient shc = new SimpleHttpClient(ruta);
+			shc.start();	
+	    } else {
+			// No -> Display error message
+	        //Toast.makeText(this, R.string.msg_error_no_connection, Toast.LENGTH_SHORT).show();
+	    }		
 	}
 
 }
