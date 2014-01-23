@@ -69,6 +69,7 @@ public class AnimalDetailsActivity extends Activity {
 			pos= Integer.parseInt(positions.get(pos));
 		}
 		fillAnimalDetails();
+		updateCurrentValues();
 	}
 
 	@Override
@@ -94,8 +95,8 @@ public class AnimalDetailsActivity extends Activity {
 		intent.setType("text/plain");
 		//String eventDetail= arrAnimals.get(pos).getName()+" has a temperature of "+ arrAnimals.get(pos).getCurrentTemperature()+" and a light of "+arrAnimals.get(pos).getCurrentLight();
 		
-		String edtCurrentLight = ((EditText) findViewById(R.id.editCurrentLight)).getText().toString();
-		String edtCurrentTemp = ((EditText) findViewById(R.id.editCurrentTemp)).getText().toString();
+		String edtCurrentLight = ((TextView) findViewById(R.id.editCurrentLight)).getText().toString();
+		String edtCurrentTemp = ((TextView) findViewById(R.id.editCurrentTemp)).getText().toString();
 		String eventDetail= arrAnimals.get(pos).getName()+" has a temperature of "+ edtCurrentTemp+" and a light of "+edtCurrentLight;
 		intent.putExtra(Intent.EXTRA_TEXT, eventDetail);
 		shareProvider.setShareIntent(intent);
@@ -118,12 +119,12 @@ public class AnimalDetailsActivity extends Activity {
 			if(animalName != null)
 				txtAnimalName.setText(animalName);
 			
-			EditText edtCurrentLight = ((EditText) findViewById(R.id.editCurrentLight));
+			TextView edtCurrentLight = ((TextView) findViewById(R.id.editCurrentLight));
 			String currentLight= "250";
 			if(currentLight != null)
 				edtCurrentLight.setText(currentLight);
 			
-			EditText edtCurrentTemp = ((EditText) findViewById(R.id.editCurrentTemp));
+			TextView edtCurrentTemp = ((TextView) findViewById(R.id.editCurrentTemp));
 			String currentTemp= "25";
 			if(currentTemp != null)
 				edtCurrentTemp.setText(currentTemp);
@@ -144,17 +145,11 @@ public class AnimalDetailsActivity extends Activity {
 		}
 	}
 	private void updateCurrentValues(){
-		//poner un loading o algo
 		
 		//receive the current temperature
 		receiveValue(TEMPERATURE_IDENTIFICATOR, TEMP_ID);
-		//editar el cuadro de texto
-		
 		//receive the current light
 		receiveValue(LIGHT_IDENTIFICATOR, LIGHT_ID);
-		//editar el cuadro de texto
-		
-		//quitar el loading o algo
 	}
 	
 	@Override
@@ -212,11 +207,41 @@ public class AnimalDetailsActivity extends Activity {
 		@Override
 		protected void onPostExecute(ArrayList<String> result) {
 			//here does what it need to do with the components
+			if(result.get(0).equals(TEMP_ID)){
+				TextView edtCurrentTemp = ((TextView) findViewById(R.id.editCurrentTemp));
+				String currentTemp= result.get(1);
+				if(currentTemp != null){
+					if(currentTemp.length()>6){
+						currentTemp=currentTemp.substring(0, 6);
+					}
+					edtCurrentTemp.setText(currentTemp);
+				}
+					
+				//cambiar imagen termometro
+				
+				
+				
+			}else if(result.get(0).equals(LIGHT_ID)){
+				TextView edtCurrentLight = ((TextView) findViewById(R.id.editCurrentLight));
+				String currentLight= result.get(1);
+				if(currentLight != null){
+					if(currentLight.length()>6){
+						currentLight=currentLight.substring(0, 6);
+					}
+					edtCurrentLight.setText(currentLight);
+				}
+				//cambiar imagen bombilla
+				
+				
+			}
+			
 		}
 		
 		private double getValueFromJson(String data){
 			double value=0;
 			try {
+				data=data.replace("[", "");
+				data=data.replace("]", "");
 				JSONObject json = new JSONObject(data);
 				value = json.getDouble("data_value");
 			} catch (JSONException e) {
@@ -224,7 +249,6 @@ public class AnimalDetailsActivity extends Activity {
 			}
 			return value;
 		}
-			
-					
+							
 	}
 }
