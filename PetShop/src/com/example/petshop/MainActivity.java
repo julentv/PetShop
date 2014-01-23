@@ -26,7 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
 
 public class MainActivity extends Activity {
 	public static final int ADD_ANIMAL = 0;
@@ -38,6 +37,7 @@ public class MainActivity extends Activity {
 	private ActionMode mActionMode = null;
 	public static final int EDIT_ANIMAL = 1;
 	private Locale locale = null;
+	private int position=0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,15 +59,35 @@ public class MainActivity extends Activity {
 	        config.locale = locale;
 	        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 	    }
-      createAnimalList();
+	    arrAnimals = (new AnimalManager(getApplicationContext())).loadAnimalsFromFile();
      list = (ListView)findViewById(R.id.listAnimals);
+     createAnimalList();
+		// Important: to select single mode
+	 list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
      list.setOnItemClickListener(new OnItemClickListener() {
      	@Override
          public void onItemClick(AdapterView<?> parent, View view, int position,
                  long id) {
-         	animalClicked(view, position, id);
+         	MainActivity.this.animalClicked(position);
          }
      });
+     
+     list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		    // Called when the user long-clicks an item on the list
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View row, int position, long rowid) {
+		        if (mActionMode != null) {
+		            return false;
+		        }
+		        animalPosition=position;
+		        // Important: to marked the editing row as activated
+		        list.setItemChecked(position, true);
+
+		        // Start the CAB using the ActionMode.Callback defined above
+		        mActionMode = MainActivity.this.startActionMode(mActionModeCallback);
+		        return true;
+		    }
+		});
      
      Button btnSearch = (Button)findViewById(R.id.btnSearch);
      btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -110,64 +130,40 @@ public class MainActivity extends Activity {
 	}
 
 	public void createAnimalList(){
-		arrAnimals = (new AnimalManager(getApplicationContext())).loadAnimalsFromFile();
-    	
     	if(arrAnimals == null){
     		arrAnimals = new ArrayList<Animal>();
     		
-    	 	}
-
+    	}
     	adpAnimals = new ArrayAdapter<Animal>(this, android.R.layout.simple_list_item_activated_2, android.R.id.text1, arrAnimals);		
-    	list = (ListView)findViewById(R.id.listAnimals);
     	list.setAdapter(adpAnimals);
-    	list.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-    	list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-		    // Called when the user long-clicks an item on the list
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View row, int position, long rowid) {
-		        if (mActionMode != null) {
-		            return false;
-		        }
-		        animalPosition=position;
-		        // Important: to marked the editing row as activated
-		        list.setItemChecked(position, true);
-
-		        // Start the CAB using the ActionMode.Callback defined above
-		        mActionMode = MainActivity.this.startActionMode(mActionModeCallback);
-		        return true;
-		    }
-		});
     	adpAnimals.notifyDataSetChanged();
 	}
 
 	public void onSearch(String text){
     	
-    	this.createAnimalList();
-	    ArrayList<Animal> newArrAnimals=new ArrayList<Animal>();    
-	    Animal animal;
+    	//this.createAnimalList();
+	    ArrayList<Animal> newArrAnimals=new ArrayList<Animal>();
 	    positions = new ArrayList<String>();
 	    for(int i=0; i<arrAnimals.size();i++){
-	    	if(arrAnimals.get(i).getName().toLowerCase().contains(text.toLowerCase())){
-	    		
-	    		animal = arrAnimals.get(i);
+	    	if(arrAnimals.get(i).getName().toLowerCase().contains(text.toLowerCase())){	    		
 	    		positions.add(Integer.toString(i));
-	    		newArrAnimals.add(new Animal(animal.getName(),animal.getLocation(), animal.getMaxLight(), animal.getMinLight(), animal.getMaxTemp(), animal.getMinTemp()));
-	    		
+	    		newArrAnimals.add(arrAnimals.get(i));	    		
 	    	}
 	    }
-	    adpAnimals = new ArrayAdapter<Animal>(this, android.R.layout.simple_list_item_1, newArrAnimals);
-		list = (ListView)findViewById(R.id.listAnimals);
+	    adpAnimals = new ArrayAdapter<Animal>(this, android.R.layout.simple_list_item_activated_2, android.R.id.text1, newArrAnimals);
 		list.setAdapter(adpAnimals);
 		adpAnimals.notifyDataSetChanged();
 	}
 
-	public void animalClicked(View v, int position, long id){
+	public void animalClicked(int position){
+		this.position=position;
 		Intent intent = new Intent( this, AnimalDetailsActivity.class );
 		animalPosition=position;
 		intent.putExtra("animalPosition", animalPosition);
 		intent.putExtra("positionsOnSearch", positions);
 		Log.i("animalPosition", Integer.toString(animalPosition));
 		startActivityForResult(intent,EDIT_ANIMAL);
+		list.setItemChecked(position, false);
 	}
 	
 	@Override
@@ -210,15 +206,6 @@ private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 	        // Inflate a menu resource providing context menu items
 	        MenuInflater inflater = mode.getMenuInflater();
 	        inflater.inflate(R.menu.animal_action, menu);
-//	        MenuItem mnuShare = menu.findItem(R.id.mnu_event_share);
-//	        
-//			ShareActionProvider shareProvider = (ShareActionProvider) mnuShare.getActionProvider();
-//			shareProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
-//			Intent intent = new Intent(Intent.ACTION_SEND);
-//			intent.setType("text/plain");
-//			String eventDetail="Event: "+arrEvents.get(eventPosition).toString();
-//			intent.putExtra(Intent.EXTRA_TEXT, eventDetail);
-//			shareProvider.setShareIntent(intent);
 	        return true;
 	    }
 
@@ -259,6 +246,7 @@ private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 	    public void onDestroyActionMode(ActionMode mode) {
 	    	// Re-enable the list after edition
 	    	MainActivity.this.list.setEnabled(true);
+	    	MainActivity.this.list.setItemChecked(MainActivity.this.position, false);
 	        mActionMode = null;
 	    }
 	};
