@@ -1,8 +1,10 @@
 package com.example.petshop;
 
 import java.util.ArrayList;
-import data.Animal;
-import data.AnimalManager;
+
+import com.example.petshop.data.Animal;
+import com.example.petshop.data.AnimalManager;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.PendingIntent;

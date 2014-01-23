@@ -3,10 +3,10 @@ package com.example.petshop;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.example.petshop.data.Animal;
+import com.example.petshop.data.AnimalManager;
 import com.example.petshop.http.SimpleHttpClient;
 
-import data.Animal;
-import data.AnimalManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;

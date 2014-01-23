@@ -70,24 +70,14 @@
         android:text="/"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/TextView02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/txtTemperature"
-        android:layout_alignBottom="@+id/txtTemperature"
-        android:layout_alignLeft="@+id/editLightMax"
-        android:layout_marginLeft="14dp"
-        android:text="/"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <EditText
         android:id="@+id/editTempMax"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/TextView02"
         android:layout_toRightOf="@+id/TextView02"
-        android:ems="3" />
+        android:ems="6"
+        android:inputType="numberDecimal" />
 
     <EditText
         android:id="@+id/editLightMax"
@@ -96,7 +86,8 @@
         android:layout_above="@+id/txtTemperature"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@+id/TextView01"
-        android:ems="3" />
+        android:ems="4"
+        android:inputType="numberDecimal" />
 
     <Button
         android:id="@+id/btnSave"
@@ -123,14 +114,26 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/TextView01"
         android:layout_toRightOf="@+id/txtAnimalName"
-        android:ems="3" />
+        android:ems="4"
+        android:inputType="numberDecimal" />
 
     <EditText
         android:id="@+id/editTempMin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnSave"
-        android:layout_toRightOf="@+id/txtTemperature"
-        android:ems="3" />
+        android:layout_alignLeft="@+id/txtTemperature"
+        android:layout_below="@+id/txtTemperature"
+        android:layout_marginTop="22dp"
+        android:ems="6"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/TextView02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editTempMin"
+        android:layout_toRightOf="@+id/editTempMin"
+        android:text="/"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

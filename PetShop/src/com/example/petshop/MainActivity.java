@@ -3,10 +3,10 @@ package com.example.petshop;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import com.example.petshop.data.Animal;
+import com.example.petshop.data.AnimalManager;
 import com.example.settings.MySettingsActivity;
 
-import data.Animal;
-import data.AnimalManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;

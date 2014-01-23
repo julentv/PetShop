@@ -69,7 +69,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/termometerImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/TextView03"
@@ -81,7 +81,7 @@
         android:src="@drawable/temp_blanco_negro" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/lampImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/TextView03"
@@ -93,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/TextView02"
-        android:layout_toRightOf="@+id/imageView2"
+        android:layout_toRightOf="@+id/termometerImage"
         android:editable="true"
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall" />

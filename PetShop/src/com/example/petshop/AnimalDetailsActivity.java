@@ -5,11 +5,12 @@ import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.example.petshop.data.Animal;
+import com.example.petshop.data.AnimalManager;
 import com.example.petshop.http.SimpleHttpClient;
 import com.example.settings.MySettingsActivity;
 
-import data.Animal;
-import data.AnimalManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
 
 
 public class AnimalDetailsActivity extends Activity {
@@ -147,10 +150,11 @@ public class AnimalDetailsActivity extends Activity {
 	}
 	private void updateCurrentValues(){
 		
+		char location=arrAnimals.get(pos).getLocation();
 		//receive the current temperature
-		receiveValue(TEMPERATURE_IDENTIFICATOR, TEMP_ID);
+		receiveValue(TEMPERATURE_IDENTIFICATOR+location, TEMP_ID);
 		//receive the current light
-		receiveValue(LIGHT_IDENTIFICATOR, LIGHT_ID);
+		receiveValue(LIGHT_IDENTIFICATOR+location, LIGHT_ID);
 	}
 	
 	@Override
@@ -220,10 +224,21 @@ public class AnimalDetailsActivity extends Activity {
 					animal.setCurrentTemperature(Double.parseDouble(currentTemp));
 					arrAnimals.set(pos, animal);
 					(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
-				}					
-				//cambiar imagen termometro
-				
-				
+					//cambiar imagen termometro
+					ImageView termometerImage=((ImageView)findViewById(R.id.termometerImage));
+					if(animal.getCurrentTemperature()<animal.getMinTemp()){
+						//termometro pequeño
+						termometerImage.setImageResource(R.drawable.temp_cold);
+					}else{
+						if(animal.getCurrentTemperature()>animal.getMaxTemp()){
+							//termometro grande
+							termometerImage.setImageResource(R.drawable.temp_hot);
+						}else{
+							//termometro medio
+							termometerImage.setImageResource(R.drawable.temp_ok);
+						}
+					}
+				}
 				
 			}else if(result.get(0).equals(LIGHT_ID)){
 				TextView edtCurrentLight = ((TextView) findViewById(R.id.editCurrentLight));
@@ -231,14 +246,30 @@ public class AnimalDetailsActivity extends Activity {
 				if(currentLight != null){
 					if(currentLight.length()>5){
 						currentLight=currentLight.substring(0, 5);
-						Animal animal=arrAnimals.get(pos);
-						animal.setCurrentLight(Double.parseDouble(currentLight));
-						arrAnimals.set(pos, animal);
-						(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
+						
 					}
+					Animal animal=arrAnimals.get(pos);
+					animal.setCurrentLight(Double.parseDouble(currentLight));
+					arrAnimals.set(pos, animal);
+					(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
 					edtCurrentLight.setText(currentLight);
+					
+					//cambiar imagen bombilla
+					ImageView lightImage=((ImageView)findViewById(R.id.lampImage));
+					if(animal.getCurrentLight()<animal.getMinLight()){
+						//termometro pequeño
+						lightImage.setImageResource(R.drawable.white_light);
+					}else{
+						if(animal.getCurrentLight()>animal.getMaxLight()){
+							//termometro grande
+							lightImage.setImageResource(R.drawable.red_light);
+						}else{
+							//termometro medio
+							lightImage.setImageResource(R.drawable.yellow_light);
+						}
+					}
 				}
-				//cambiar imagen bombilla
+				
 				
 				
 			}

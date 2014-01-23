@@ -1,4 +1,4 @@
-package data;
+package com.example.petshop.data;
 
 import java.io.Serializable;
 
