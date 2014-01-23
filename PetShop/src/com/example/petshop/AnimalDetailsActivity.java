@@ -115,17 +115,18 @@ public class AnimalDetailsActivity extends Activity {
 		if (pos!= -1){
 			
 			TextView txtAnimalName = ((TextView) findViewById(R.id.txtAnimalName));
-			String animalName= arrAnimals.get(pos).getName();
+			Animal animal=arrAnimals.get(pos);
+			String animalName= animal.getName();
 			if(animalName != null)
 				txtAnimalName.setText(animalName);
 			
 			TextView edtCurrentLight = ((TextView) findViewById(R.id.editCurrentLight));
-			String currentLight= "250";
+			String currentLight= Double.valueOf(animal.getCurrentLight()).toString();
 			if(currentLight != null)
 				edtCurrentLight.setText(currentLight);
 			
 			TextView edtCurrentTemp = ((TextView) findViewById(R.id.editCurrentTemp));
-			String currentTemp= "25";
+			String currentTemp= Double.valueOf(animal.getCurrentTemperature()).toString();
 			if(currentTemp != null)
 				edtCurrentTemp.setText(currentTemp);
 			
@@ -215,8 +216,11 @@ public class AnimalDetailsActivity extends Activity {
 						currentTemp=currentTemp.substring(0, 6);
 					}
 					edtCurrentTemp.setText(currentTemp);
-				}
-					
+					Animal animal=arrAnimals.get(pos);
+					animal.setCurrentTemperature(Double.parseDouble(currentTemp));
+					arrAnimals.set(pos, animal);
+					(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
+				}					
 				//cambiar imagen termometro
 				
 				
@@ -225,8 +229,12 @@ public class AnimalDetailsActivity extends Activity {
 				TextView edtCurrentLight = ((TextView) findViewById(R.id.editCurrentLight));
 				String currentLight= result.get(1);
 				if(currentLight != null){
-					if(currentLight.length()>6){
-						currentLight=currentLight.substring(0, 6);
+					if(currentLight.length()>5){
+						currentLight=currentLight.substring(0, 5);
+						Animal animal=arrAnimals.get(pos);
+						animal.setCurrentLight(Double.parseDouble(currentLight));
+						arrAnimals.set(pos, animal);
+						(new AnimalManager(getApplicationContext())).saveAnimalsOnFile(arrAnimals);
 					}
 					edtCurrentLight.setText(currentLight);
 				}

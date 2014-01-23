@@ -31,15 +31,6 @@
         <requestFocus />
     </EditText>
 
-    <EditText
-        android:id="@+id/editLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editName"
-        android:layout_below="@+id/editName"
-        android:layout_marginTop="26dp"
-        android:ems="9" />
-
     <TextView
         android:id="@+id/txtLocation"
         android:layout_width="wrap_content"
@@ -58,14 +49,6 @@
         android:layout_marginTop="50dp"
         android:text="@string/light"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <EditText
-        android:id="@+id/editLightMin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/txtLight"
-        android:layout_alignLeft="@+id/editLocation"
-        android:ems="3" />
 
     <TextView
         android:id="@+id/txtTemperature"
@@ -115,14 +98,6 @@
         android:layout_toRightOf="@+id/TextView01"
         android:ems="3" />
 
-    <EditText
-        android:id="@+id/editTempMin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/txtTemperature"
-        android:layout_toLeftOf="@+id/TextView02"
-        android:ems="3" />
-
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
@@ -131,5 +106,31 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="72dp"
         android:text="@string/save" />
+
+    <EditText
+        android:id="@+id/editLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editName"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="44dp"
+        android:layout_toRightOf="@+id/txtTemperature"
+        android:ems="9" />
+
+    <EditText
+        android:id="@+id/editLightMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/TextView01"
+        android:layout_toRightOf="@+id/txtAnimalName"
+        android:ems="3" />
+
+    <EditText
+        android:id="@+id/editTempMin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSave"
+        android:layout_toRightOf="@+id/txtTemperature"
+        android:ems="3" />
 
 </RelativeLayout>
