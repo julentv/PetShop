@@ -32,7 +32,7 @@ public class Animal implements Serializable{
 
 	@Override
 	public String toString() {
-		return name + " - " + location ;
+		return name  ;
 	}
 
 	public String getName() {
